@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Modal } from 'react-native';
 import { styles } from '../styles/AddWorkoutStyles';
 import { ButtonGroup } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { TextInput } from 'react-native-paper'; 
+import { TextInput as PaperTextInput } from 'react-native-paper'; // Use TextInput from React Native Paper
+import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
+import ModalComponent from 'react-native-modal'; // Modal from react-native-modal
 
 const AddWorkout = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [distance, setDistance] = useState('');
   const [duration, setDuration] = useState('');
   const [workout, setWorkout] = useState('');
+  const [isModalVisible, setModalVisible] = useState(false); // Modal visibility
+  const [selectedDate, setSelectedDate] = useState(''); // Selected date
 
   const updateIndex = (index) => {
     setSelectedIndex(index);
@@ -37,7 +41,21 @@ const AddWorkout = () => {
   ];
 
   const handleSubmit = () => {
-    console.log(`Workout: ${workout}, Distance: ${distance}, Duration: ${duration}`);
+    console.log(`Workout: ${workout}, Distance: ${distance}, Duration: ${duration}, Date: ${selectedDate}`);
+  };
+
+  // Modal handlers
+  const showModal = () => {
+    setModalVisible(true);
+  };
+
+  const hideModal = () => {
+    setModalVisible(false);
+  };
+
+  const onDayPress = (day) => {
+    setSelectedDate(day.dateString); // Set the selected date
+    hideModal(); // Hide the modal after selecting a date
   };
 
   return (
@@ -54,17 +72,18 @@ const AddWorkout = () => {
         innerBorderStyle={{ width: 0 }}
       />
 
-   
-      <TextInput
+      {/* TextInput for entering distance */}
+      <PaperTextInput
         label="Distance (km)"
         value={distance}
         onChangeText={setDistance}
-        mode="outlined" 
+        mode="outlined"
         style={styles.textInput} 
         keyboardType="numeric"
       />
 
-      <TextInput
+      {/* TextInput for entering duration */}
+      <PaperTextInput
         label="Duration (min)"
         value={duration}
         onChangeText={setDuration}
@@ -73,6 +92,26 @@ const AddWorkout = () => {
         keyboardType="numeric"
       />
 
+      {/* Calendar Modal Trigger */}
+      <TouchableOpacity onPress={showModal} style={styles.datePickerButton}>
+        <Text style={styles.datePickerText}>
+          {selectedDate ? selectedDate : 'Select Date'}
+        </Text>
+      </TouchableOpacity>
+
+      {/* Modal for the Calendar */}
+      <ModalComponent isVisible={isModalVisible} onBackdropPress={hideModal}>
+        <View style={styles.modalContainer}>
+          <Calendar
+            onDayPress={onDayPress}
+            markedDates={{
+              [selectedDate]: { selected: true, marked: true, selectedColor: '#6200ea' },
+            }}
+          />
+        </View>
+      </ModalComponent>
+
+      {/* Submit Button */}
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Add Workout</Text>
       </TouchableOpacity>

@@ -43,6 +43,25 @@ export const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 20,
   },
+  datePickerButton: {
+    backgroundColor: '#e0e0e0',
+    paddingVertical: 15,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  datePickerText: {
+    fontSize: 16,
+    color: '#6200ea',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
   button: {
     backgroundColor: '#6200ea',
     paddingVertical: 15,
