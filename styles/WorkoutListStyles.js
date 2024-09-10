@@ -54,7 +54,13 @@ export const styles = StyleSheet.create({
     height: 70,
     borderRadius: 15,
     marginVertical: 10,
-    borderColor: '#6200ea', 
-    backgroundColor: '#6200ea', 
+    borderColor: '#e0dbeb', 
+    backgroundColor: '#e0dbeb',
   },
+  iconText: {
+    fontSize: 16,
+    color: '#000',
+    fontWeight: 'bold',
+  },
+
 });

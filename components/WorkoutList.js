@@ -66,7 +66,6 @@ const WorkoutList = ({ workouts }) => {
   renderItem={({ item }) => (
     <View style={styles.item}>
       <View style={styles.rowContainer}>
-        {/* Display the workout icon */}
         <View style={styles.iconContainer}>
           {item.workout === 'Run' && (
             <FontAwesome5 name="running" size={24} color="black" />
