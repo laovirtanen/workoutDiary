@@ -46,7 +46,6 @@ const WorkoutList = ({ workouts }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Workout Summary</Text>
 
       <View style={styles.buttonGroupWrapper}>
         <ButtonGroup
@@ -62,30 +61,36 @@ const WorkoutList = ({ workouts }) => {
 
       {workouts.length > 0 ? (
         <FlatList
-          data={workouts}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.item}>
-              <View style={styles.iconContainer}>
-                {item.workout === 'Run' && (
-                  <FontAwesome5 name="running" size={24} color="black" />
-                )}
-                {item.workout === 'Ski' && (
-                  <FontAwesome5 name="skiing-nordic" size={24} color="black" />
-                )}
-                {item.workout === 'Swim' && (
-                  <FontAwesome5 name="swimmer" size={24} color="black" />
-                )}
-              </View>
-              <View style={styles.textContainer}>
-                <Text style={styles.itemText}>Workout: {item.workout}</Text>
-                <Text style={styles.itemText}>Distance: {item.distance} km</Text>
-                <Text style={styles.itemText}>Duration: {item.duration} min</Text>
-                <Text style={styles.itemText}>Date: {item.date}</Text>
-              </View>
-            </View>
+  data={workouts}
+  keyExtractor={(item, index) => index.toString()}
+  renderItem={({ item }) => (
+    <View style={styles.item}>
+      <View style={styles.rowContainer}>
+        {/* Display the workout icon */}
+        <View style={styles.iconContainer}>
+          {item.workout === 'Run' && (
+            <FontAwesome5 name="running" size={24} color="black" />
           )}
-        />
+          {item.workout === 'Ski' && (
+            <FontAwesome5 name="skiing-nordic" size={24} color="black" />
+          )}
+          {item.workout === 'Swim' && (
+            <FontAwesome5 name="swimmer" size={24} color="black" />
+          )}
+        </View>
+
+        <Text style={styles.dateText}>{item.date}</Text>
+      </View>
+
+      <View style={styles.textContainer}>
+        <Text style={styles.itemText}>Workout: {item.workout}</Text>
+        <Text style={styles.itemText}>Distance: {item.distance} km</Text>
+        <Text style={styles.itemText}>Duration: {item.duration} min</Text>
+      </View>
+    </View>
+  )}
+/>
+
       ) : (
         <Text>No workouts added yet</Text>
       )}

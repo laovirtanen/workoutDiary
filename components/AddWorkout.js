@@ -88,14 +88,12 @@ const AddWorkout = ({ navigation, addWorkout }) => {
         keyboardType="numeric"
       />
 
-      {/* Date Picker Button */}
       <TouchableOpacity onPress={toggleModal} style={styles.datePickerButton}>
         <Text style={styles.datePickerText}>
           {selectedDate ? `Date: ${selectedDate}` : 'Select Date'}
         </Text>
       </TouchableOpacity>
 
-      {/* Modal for Calendar */}
       <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
         <View style={styles.modalContainer}>
           <Calendar
