@@ -32,4 +32,12 @@ export const styles = StyleSheet.create({
     color: '#6200ea', 
     textAlign: 'center',
   },
+  buttonGroupContainer: {
+    borderRadius: 25,
+    marginBottom: 20,
+    borderColor: '#6200ea',
+    borderWidth: 1,
+    height: 70,
+    overflow: 'hidden',
+  },  
 });

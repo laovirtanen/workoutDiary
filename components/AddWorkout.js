@@ -4,13 +4,15 @@ import { styles } from '../styles/AddWorkoutStyles';
 import { ButtonGroup } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { TextInput as PaperTextInput } from 'react-native-paper';
+import { Calendar } from 'react-native-calendars';
+import Modal from 'react-native-modal';
 
 const AddWorkout = ({ navigation, addWorkout }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [distance, setDistance] = useState('');
   const [duration, setDuration] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
-
+  const [isModalVisible, setModalVisible] = useState(false);
 
   // Define workout options with icons and labels
   const buttons = [
@@ -37,8 +39,16 @@ const AddWorkout = ({ navigation, addWorkout }) => {
     };
 
     addWorkout(newWorkout); 
-
     navigation.navigate('Workout List'); 
+  };
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
+  const handleDayPress = (day) => {
+    setSelectedDate(day.dateString);
+    setModalVisible(false);
   };
 
   return (
@@ -77,6 +87,25 @@ const AddWorkout = ({ navigation, addWorkout }) => {
         style={styles.textInput}
         keyboardType="numeric"
       />
+
+      {/* Date Picker Button */}
+      <TouchableOpacity onPress={toggleModal} style={styles.datePickerButton}>
+        <Text style={styles.datePickerText}>
+          {selectedDate ? `Date: ${selectedDate}` : 'Select Date'}
+        </Text>
+      </TouchableOpacity>
+
+      {/* Modal for Calendar */}
+      <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
+        <View style={styles.modalContainer}>
+          <Calendar
+            onDayPress={handleDayPress}
+            markedDates={{
+              [selectedDate]: { selected: true, marked: true, selectedColor: '#6200ea' },
+            }}
+          />
+        </View>
+      </Modal>
 
       <TouchableOpacity style={styles.button} onPress={handleSubmit}>
         <Text style={styles.buttonText}>Add Workout</Text>
