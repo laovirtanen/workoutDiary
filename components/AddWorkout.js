@@ -6,15 +6,17 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { TextInput as PaperTextInput } from 'react-native-paper';
 import { Calendar } from 'react-native-calendars';
 import Modal from 'react-native-modal';
+import { useWorkout } from '../context/WorkoutContext';  // Import the context hook
 
-const AddWorkout = ({ navigation, addWorkout }) => {
+const AddWorkout = ({ navigation }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [distance, setDistance] = useState('');
   const [duration, setDuration] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
 
-  // Define workout options with icons and labels
+  const { addWorkout } = useWorkout();  // Access addWorkout from context
+
   const buttons = [
     {
       text: 'Run',
@@ -38,8 +40,8 @@ const AddWorkout = ({ navigation, addWorkout }) => {
       date: selectedDate,
     };
 
-    addWorkout(newWorkout); 
-    navigation.navigate('Workout List'); 
+    addWorkout(newWorkout);  
+    navigation.navigate('Workouts');
   };
 
   const toggleModal = () => {

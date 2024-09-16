@@ -3,8 +3,10 @@ import { View, Text, FlatList } from 'react-native';
 import { styles } from '../styles/WorkoutListStyles';
 import { ButtonGroup } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons'; 
+import { useWorkout } from '../context/WorkoutContext';  // Import the context hook
 
-const WorkoutList = ({ workouts }) => {
+const WorkoutList = () => {
+  const { workouts } = useWorkout();  // Access workouts from context
   const [totals, setTotals] = useState({ run: 0, ski: 0, swim: 0 });
 
   useEffect(() => {
@@ -46,7 +48,6 @@ const WorkoutList = ({ workouts }) => {
 
   return (
     <View style={styles.container}>
-
       <View style={styles.buttonGroupWrapper}>
         <ButtonGroup
           buttons={renderButtonGroup()}
@@ -61,35 +62,34 @@ const WorkoutList = ({ workouts }) => {
 
       {workouts.length > 0 ? (
         <FlatList
-  data={workouts}
-  keyExtractor={(item, index) => index.toString()}
-  renderItem={({ item }) => (
-    <View style={styles.item}>
-      <View style={styles.rowContainer}>
-        <View style={styles.iconContainer}>
-          {item.workout === 'Run' && (
-            <FontAwesome5 name="running" size={24} color="black" />
-          )}
-          {item.workout === 'Ski' && (
-            <FontAwesome5 name="skiing-nordic" size={24} color="black" />
-          )}
-          {item.workout === 'Swim' && (
-            <FontAwesome5 name="swimmer" size={24} color="black" />
-          )}
-        </View>
+          data={workouts}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.item}>
+              <View style={styles.rowContainer}>
+                <View style={styles.iconContainer}>
+                  {item.workout === 'Run' && (
+                    <FontAwesome5 name="running" size={24} color="black" />
+                  )}
+                  {item.workout === 'Ski' && (
+                    <FontAwesome5 name="skiing-nordic" size={24} color="black" />
+                  )}
+                  {item.workout === 'Swim' && (
+                    <FontAwesome5 name="swimmer" size={24} color="black" />
+                  )}
+                </View>
 
-        <Text style={styles.dateText}>{item.date}</Text>
-      </View>
+                <Text style={styles.dateText}>{item.date}</Text>
+              </View>
 
-      <View style={styles.textContainer}>
-        <Text style={styles.itemText}>Workout: {item.workout}</Text>
-        <Text style={styles.itemText}>Distance: {item.distance} km</Text>
-        <Text style={styles.itemText}>Duration: {item.duration} min</Text>
-      </View>
-    </View>
-  )}
-/>
-
+              <View style={styles.textContainer}>
+                <Text style={styles.itemText}>Workout: {item.workout}</Text>
+                <Text style={styles.itemText}>Distance: {item.distance} km</Text>
+                <Text style={styles.itemText}>Duration: {item.duration} min</Text>
+              </View>
+            </View>
+          )}
+        />
       ) : (
         <Text>No workouts added yet</Text>
       )}

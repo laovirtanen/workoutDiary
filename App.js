@@ -1,29 +1,44 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AddWorkout from './components/AddWorkout';
 import WorkoutList from './components/WorkoutList';
+import Settings from './components/Settings';
+import { WorkoutProvider } from './context/WorkoutContext';
+import { FontAwesome5 } from '@expo/vector-icons';
 
-const Stack = createStackNavigator();
+// Create Tab Navigator
+const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const [workouts, setWorkouts] = useState([]);
-
-  // Function to add new workout
-  const addWorkout = (newWorkout) => {
-    setWorkouts([...workouts, newWorkout]);
-  };
-
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Add Workout">
-        <Stack.Screen name="Add Workout">
-          {(props) => <AddWorkout {...props} addWorkout={addWorkout} />} 
-        </Stack.Screen>
-        <Stack.Screen name="Workout List">
-          {(props) => <WorkoutList {...props} workouts={workouts} />} 
-        </Stack.Screen>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <WorkoutProvider>
+      <NavigationContainer>
+        <Tab.Navigator
+          initialRouteName="Home"
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ color, size }) => {
+              let iconName;
+
+              if (route.name === 'Home') {
+                iconName = 'home';
+              } else if (route.name === 'Workouts') {
+                iconName = 'dumbbell';
+              } else if (route.name === 'Settings') {
+                iconName = 'cog';
+              }
+
+              return <FontAwesome5 name={iconName} size={size} color={color} />;
+            },
+            tabBarActiveTintColor: '#6200ea',
+            tabBarInactiveTintColor: 'gray',
+          })}
+        >
+          <Tab.Screen name="Home" component={AddWorkout} />
+          <Tab.Screen name="Workouts" component={WorkoutList} />
+          <Tab.Screen name="Settings" component={Settings} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </WorkoutProvider>
   );
 }
