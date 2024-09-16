@@ -6,35 +6,44 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { useWorkout } from '../context/WorkoutContext';  // Import the context hook
 
 const WorkoutList = () => {
-  const { workouts } = useWorkout();  // Access workouts from context
+  const { workouts, unit } = useWorkout();  // Access workouts and unit from context
   const [totals, setTotals] = useState({ run: 0, ski: 0, swim: 0 });
 
+  // Function to convert distance based on the selected unit
+  const convertDistance = (distance) => {
+    if (unit === 'miles') {
+      return (parseFloat(distance) * 0.621371).toFixed(2);  // Convert to miles
+    }
+    return parseFloat(distance).toFixed(2);  // Keep in kilometers
+  };
+
+  // Calculate totals for each workout type (Run, Ski, Swim) and convert distance if needed
   useEffect(() => {
     const runTotal = workouts
       .filter(workout => workout.workout === 'Run')
-      .reduce((sum, workout) => sum + parseFloat(workout.distance || 0), 0);
+      .reduce((sum, workout) => sum + parseFloat(convertDistance(workout.distance || 0)), 0);
     const skiTotal = workouts
       .filter(workout => workout.workout === 'Ski')
-      .reduce((sum, workout) => sum + parseFloat(workout.distance || 0), 0);
+      .reduce((sum, workout) => sum + parseFloat(convertDistance(workout.distance || 0)), 0);
     const swimTotal = workouts
       .filter(workout => workout.workout === 'Swim')
-      .reduce((sum, workout) => sum + parseFloat(workout.distance || 0), 0);
+      .reduce((sum, workout) => sum + parseFloat(convertDistance(workout.distance || 0)), 0);
 
     setTotals({ run: runTotal, ski: skiTotal, swim: swimTotal });
-  }, [workouts]);
+  }, [workouts, unit]);
 
   const buttons = [
     {
       icon: <FontAwesome5 name="running" size={24} color="black" />,
-      text: `Run: ${totals.run} km`,
+      text: `Run: ${totals.run} ${unit}`,
     },
     {
       icon: <FontAwesome5 name="skiing-nordic" size={24} color="black" />,
-      text: `Ski: ${totals.ski} km`,
+      text: `Ski: ${totals.ski} ${unit}`,
     },
     {
       icon: <FontAwesome5 name="swimmer" size={24} color="black" />,
-      text: `Swim: ${totals.swim} km`,
+      text: `Swim: ${totals.swim} ${unit}`,
     },
   ];
 
@@ -84,7 +93,7 @@ const WorkoutList = () => {
 
               <View style={styles.textContainer}>
                 <Text style={styles.itemText}>Workout: {item.workout}</Text>
-                <Text style={styles.itemText}>Distance: {item.distance} km</Text>
+                <Text style={styles.itemText}>Distance: {convertDistance(item.distance)} {unit}</Text>
                 <Text style={styles.itemText}>Duration: {item.duration} min</Text>
               </View>
             </View>
@@ -98,3 +107,4 @@ const WorkoutList = () => {
 };
 
 export default WorkoutList;
+

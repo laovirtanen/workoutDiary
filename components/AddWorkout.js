@@ -15,7 +15,7 @@ const AddWorkout = ({ navigation }) => {
   const [selectedDate, setSelectedDate] = useState('');
   const [isModalVisible, setModalVisible] = useState(false);
 
-  const { addWorkout } = useWorkout();  // Access addWorkout from context
+  const { addWorkout, unit } = useWorkout();  // Access addWorkout and unit from context
 
   const buttons = [
     {
@@ -34,14 +34,14 @@ const AddWorkout = ({ navigation }) => {
 
   const handleSubmit = () => {
     const newWorkout = {
-      workout: buttons[selectedIndex].text, 
+      workout: buttons[selectedIndex].text,
       distance,
       duration,
       date: selectedDate,
     };
 
-    addWorkout(newWorkout);  
-    navigation.navigate('Workouts');
+    addWorkout(newWorkout);  // Add the workout using context
+    navigation.navigate('Workouts');  // Navigate to Workout List
   };
 
   const toggleModal = () => {
@@ -72,8 +72,9 @@ const AddWorkout = ({ navigation }) => {
         innerBorderStyle={{ width: 0 }}
       />
 
+      {/* Update the label based on the selected unit */}
       <PaperTextInput
-        label="Distance (km)"
+        label={`Distance (${unit})`}  // Dynamically change between km and miles
         value={distance}
         onChangeText={setDistance}
         mode="outlined"
