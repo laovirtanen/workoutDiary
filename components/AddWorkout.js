@@ -131,7 +131,7 @@ const AddWorkout = ({ navigation }) => {
           ))}
           containerStyle={styles.buttonGroupContainer}
           buttonStyle={styles.buttonGroupButton}
-          selectedButtonStyle={styles.selectedButtonGroupButton} // Applies selected background color
+          selectedButtonStyle={styles.selectedButtonGroupButton} // Apply selected background color
           innerBorderStyle={{ width: 0 }}
         />
 

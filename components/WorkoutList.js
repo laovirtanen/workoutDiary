@@ -11,14 +11,14 @@ const WorkoutList = () => {
 
   // Function to convert distance based on the selected unit
   const convertDistance = (distance) => {
-    const numericDistance = Number(distance); // Use Number() instead of parseFloat
+    const numericDistance = Number(distance);
     if (unit === "miles") {
       return (numericDistance * 0.621371).toFixed(2); // Convert to miles
     }
-    return numericDistance.toFixed(2); // Keep in kilometers
+    return numericDistance.toFixed(2); // in kilometers
   };
 
-  // Calculate totals for each workout type (Run, Ski, Swim) and convert distance if needed
+  // Calculate totals for each workout type (Run, Ski, Swim) and convert distance if needed, useeffect for rerender
   useEffect(() => {
     const totals = { run: 0, ski: 0, swim: 0 };
 
@@ -36,6 +36,7 @@ const WorkoutList = () => {
     setTotals(totals);
   }, [workouts, unit]);
 
+  //Buttons and fontawsome icons
   const buttons = [
     {
       icon: <FontAwesome5 name="running" size={24} color="black" />,
@@ -51,6 +52,7 @@ const WorkoutList = () => {
     },
   ];
 
+  // rendering the button group
   const renderButtonGroup = () =>
     buttons.map((button, index) => (
       <View key={index} style={styles.iconButton}>
