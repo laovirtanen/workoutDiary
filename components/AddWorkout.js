@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { styles } from "../styles/AddWorkoutStyles";
 import { ButtonGroup } from "react-native-elements";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -53,7 +60,7 @@ const AddWorkout = ({ navigation }) => {
       return false;
     }
 
-    // Ensure a date is selected
+    // date must be selected
     if (!selectedDate) {
       Alert.alert("Error", "Please select a date for the workout.");
       return false;
@@ -92,67 +99,69 @@ const AddWorkout = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Add Workout</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Text style={styles.header}>Add Workout</Text>
 
-      <ButtonGroup
-        onPress={(index) => setSelectedIndex(index)}
-        selectedIndex={selectedIndex}
-        buttons={buttons.map((button) => (
-          <View style={styles.iconButton}>
-            {button.icon}
-            <Text style={styles.iconText}>{button.text}</Text>
+        <ButtonGroup
+          onPress={(index) => setSelectedIndex(index)}
+          selectedIndex={selectedIndex}
+          buttons={buttons.map((button) => (
+            <View style={styles.iconButton}>
+              {button.icon}
+              <Text style={styles.iconText}>{button.text}</Text>
+            </View>
+          ))}
+          containerStyle={styles.buttonGroupContainer}
+          buttonStyle={styles.buttonGroupButton}
+          selectedButtonStyle={styles.selectedButtonGroupButton}
+          innerBorderStyle={{ width: 0 }}
+        />
+
+        <PaperTextInput
+          label={`Distance (${unit})`}
+          value={distance}
+          onChangeText={setDistance}
+          mode="outlined"
+          style={styles.textInput}
+          keyboardType="numeric"
+        />
+
+        <PaperTextInput
+          label="Duration (min)"
+          value={duration}
+          onChangeText={setDuration}
+          mode="outlined"
+          style={styles.textInput}
+          keyboardType="numeric"
+        />
+
+        <TouchableOpacity onPress={toggleModal} style={styles.datePickerButton}>
+          <Text style={styles.datePickerText}>
+            {selectedDate ? `Date: ${selectedDate}` : "Select Date"}
+          </Text>
+        </TouchableOpacity>
+
+        <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
+          <View style={styles.modalContainer}>
+            <Calendar
+              onDayPress={handleDayPress}
+              markedDates={{
+                [selectedDate]: {
+                  selected: true,
+                  marked: true,
+                  selectedColor: "#6200ea",
+                },
+              }}
+            />
           </View>
-        ))}
-        containerStyle={styles.buttonGroupContainer}
-        buttonStyle={styles.buttonGroupButton}
-        selectedButtonStyle={styles.selectedButtonGroupButton}
-        innerBorderStyle={{ width: 0 }}
-      />
+        </Modal>
 
-      <PaperTextInput
-        label={`Distance (${unit})`}
-        value={distance}
-        onChangeText={setDistance}
-        mode="outlined"
-        style={styles.textInput}
-        keyboardType="numeric"
-      />
-
-      <PaperTextInput
-        label="Duration (min)"
-        value={duration}
-        onChangeText={setDuration}
-        mode="outlined"
-        style={styles.textInput}
-        keyboardType="numeric"
-      />
-
-      <TouchableOpacity onPress={toggleModal} style={styles.datePickerButton}>
-        <Text style={styles.datePickerText}>
-          {selectedDate ? `Date: ${selectedDate}` : "Select Date"}
-        </Text>
-      </TouchableOpacity>
-
-      <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
-        <View style={styles.modalContainer}>
-          <Calendar
-            onDayPress={handleDayPress}
-            markedDates={{
-              [selectedDate]: {
-                selected: true,
-                marked: true,
-                selectedColor: "#6200ea",
-              },
-            }}
-          />
-        </View>
-      </Modal>
-
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Add Workout</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Add Workout</Text>
+        </TouchableOpacity>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
