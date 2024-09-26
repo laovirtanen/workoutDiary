@@ -1,47 +1,85 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { styles } from '../styles/AddWorkoutStyles';
-import { ButtonGroup } from 'react-native-elements';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { TextInput as PaperTextInput } from 'react-native-paper';
-import { Calendar } from 'react-native-calendars';
-import Modal from 'react-native-modal';
-import { useWorkout } from '../context/WorkoutContext';  // Import the context hook
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { styles } from "../styles/AddWorkoutStyles";
+import { ButtonGroup } from "react-native-elements";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { TextInput as PaperTextInput } from "react-native-paper";
+import { Calendar } from "react-native-calendars";
+import Modal from "react-native-modal";
+import { useWorkout } from "../context/WorkoutContext";
 
 const AddWorkout = ({ navigation }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [distance, setDistance] = useState('');
-  const [duration, setDuration] = useState('');
-  const [selectedDate, setSelectedDate] = useState('');
+  const [distance, setDistance] = useState("");
+  const [duration, setDuration] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
   const [isModalVisible, setModalVisible] = useState(false);
 
-  const { addWorkout, unit } = useWorkout();  // Access addWorkout and unit from context
+  const { addWorkout, unit } = useWorkout();
 
   const buttons = [
     {
-      text: 'Run',
+      text: "Run",
       icon: <FontAwesome5 name="running" size={24} color="black" />,
     },
     {
-      text: 'Ski',
+      text: "Ski",
       icon: <FontAwesome5 name="skiing-nordic" size={24} color="black" />,
     },
     {
-      text: 'Swim',
+      text: "Swim",
       icon: <FontAwesome5 name="swimmer" size={24} color="black" />,
     },
   ];
 
-  const handleSubmit = () => {
-    const newWorkout = {
-      workout: buttons[selectedIndex].text,
-      distance,
-      duration,
-      date: selectedDate,
-    };
+  // Validation for distance and duration inputs
+  const validateInputs = () => {
+    // Check if distance and duration are numbers and greater than 0
+    if (isNaN(distance) || isNaN(duration)) {
+      Alert.alert(
+        "Error",
+        "Please enter valid numeric values for distance and duration."
+      );
+      return false;
+    }
 
-    addWorkout(newWorkout);  // Add the workout using context
-    navigation.navigate('Workouts');  // Navigate to Workout List
+    if (Number(distance) <= 0) {
+      Alert.alert("Error", "Distance should be a positive number.");
+      return false;
+    }
+
+    if (Number(duration) <= 0) {
+      Alert.alert("Error", "Duration should be a positive number.");
+      return false;
+    }
+
+    // Ensure a date is selected
+    if (!selectedDate) {
+      Alert.alert("Error", "Please select a date for the workout.");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if (validateInputs()) {
+      const newWorkout = {
+        workout: buttons[selectedIndex].text,
+        distance,
+        duration,
+        date: selectedDate,
+      };
+
+      addWorkout(newWorkout);
+
+      // Clear input fields after adding workout
+      setDistance("");
+      setDuration("");
+      setSelectedDate("");
+
+      navigation.navigate("Workouts");
+    }
   };
 
   const toggleModal = () => {
@@ -72,9 +110,8 @@ const AddWorkout = ({ navigation }) => {
         innerBorderStyle={{ width: 0 }}
       />
 
-      {/* Update the label based on the selected unit */}
       <PaperTextInput
-        label={`Distance (${unit})`}  // Dynamically change between km and miles
+        label={`Distance (${unit})`}
         value={distance}
         onChangeText={setDistance}
         mode="outlined"
@@ -93,7 +130,7 @@ const AddWorkout = ({ navigation }) => {
 
       <TouchableOpacity onPress={toggleModal} style={styles.datePickerButton}>
         <Text style={styles.datePickerText}>
-          {selectedDate ? `Date: ${selectedDate}` : 'Select Date'}
+          {selectedDate ? `Date: ${selectedDate}` : "Select Date"}
         </Text>
       </TouchableOpacity>
 
@@ -102,7 +139,11 @@ const AddWorkout = ({ navigation }) => {
           <Calendar
             onDayPress={handleDayPress}
             markedDates={{
-              [selectedDate]: { selected: true, marked: true, selectedColor: '#6200ea' },
+              [selectedDate]: {
+                selected: true,
+                marked: true,
+                selectedColor: "#6200ea",
+              },
             }}
           />
         </View>

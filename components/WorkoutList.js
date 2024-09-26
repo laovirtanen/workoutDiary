@@ -1,35 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList } from 'react-native';
-import { styles } from '../styles/WorkoutListStyles';
-import { ButtonGroup } from 'react-native-elements';
-import { FontAwesome5 } from '@expo/vector-icons'; 
-import { useWorkout } from '../context/WorkoutContext';  // Import the context hook
+import React, { useState, useEffect } from "react";
+import { View, Text, FlatList } from "react-native";
+import { styles } from "../styles/WorkoutListStyles";
+import { ButtonGroup } from "react-native-elements";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { useWorkout } from "../context/WorkoutContext"; // Import the context hook
 
 const WorkoutList = () => {
-  const { workouts, unit } = useWorkout();  // Access workouts and unit from context
+  const { workouts, unit } = useWorkout(); // Access workouts and unit from context
   const [totals, setTotals] = useState({ run: 0, ski: 0, swim: 0 });
 
   // Function to convert distance based on the selected unit
   const convertDistance = (distance) => {
-    if (unit === 'miles') {
-      return (parseFloat(distance) * 0.621371).toFixed(2);  // Convert to miles
+    const numericDistance = Number(distance); // Use Number() instead of parseFloat
+    if (unit === "miles") {
+      return (numericDistance * 0.621371).toFixed(2); // Convert to miles
     }
-    return parseFloat(distance).toFixed(2);  // Keep in kilometers
+    return numericDistance.toFixed(2); // Keep in kilometers
   };
 
   // Calculate totals for each workout type (Run, Ski, Swim) and convert distance if needed
   useEffect(() => {
-    const runTotal = workouts
-      .filter(workout => workout.workout === 'Run')
-      .reduce((sum, workout) => sum + parseFloat(convertDistance(workout.distance || 0)), 0);
-    const skiTotal = workouts
-      .filter(workout => workout.workout === 'Ski')
-      .reduce((sum, workout) => sum + parseFloat(convertDistance(workout.distance || 0)), 0);
-    const swimTotal = workouts
-      .filter(workout => workout.workout === 'Swim')
-      .reduce((sum, workout) => sum + parseFloat(convertDistance(workout.distance || 0)), 0);
+    const totals = { run: 0, ski: 0, swim: 0 };
 
-    setTotals({ run: runTotal, ski: skiTotal, swim: swimTotal });
+    workouts.forEach((workout) => {
+      const distance = Number(convertDistance(workout.distance || 0));
+      if (workout.workout === "Run") {
+        totals.run += distance;
+      } else if (workout.workout === "Ski") {
+        totals.ski += distance;
+      } else if (workout.workout === "Swim") {
+        totals.swim += distance;
+      }
+    });
+
+    setTotals(totals);
   }, [workouts, unit]);
 
   const buttons = [
@@ -77,13 +81,17 @@ const WorkoutList = () => {
             <View style={styles.item}>
               <View style={styles.rowContainer}>
                 <View style={styles.iconContainer}>
-                  {item.workout === 'Run' && (
+                  {item.workout === "Run" && (
                     <FontAwesome5 name="running" size={24} color="black" />
                   )}
-                  {item.workout === 'Ski' && (
-                    <FontAwesome5 name="skiing-nordic" size={24} color="black" />
+                  {item.workout === "Ski" && (
+                    <FontAwesome5
+                      name="skiing-nordic"
+                      size={24}
+                      color="black"
+                    />
                   )}
-                  {item.workout === 'Swim' && (
+                  {item.workout === "Swim" && (
                     <FontAwesome5 name="swimmer" size={24} color="black" />
                   )}
                 </View>
@@ -93,8 +101,12 @@ const WorkoutList = () => {
 
               <View style={styles.textContainer}>
                 <Text style={styles.itemText}>Workout: {item.workout}</Text>
-                <Text style={styles.itemText}>Distance: {convertDistance(item.distance)} {unit}</Text>
-                <Text style={styles.itemText}>Duration: {item.duration} min</Text>
+                <Text style={styles.itemText}>
+                  Distance: {convertDistance(item.distance)} {unit}
+                </Text>
+                <Text style={styles.itemText}>
+                  Duration: {item.duration} min
+                </Text>
               </View>
             </View>
           )}
@@ -107,4 +119,3 @@ const WorkoutList = () => {
 };
 
 export default WorkoutList;
-
