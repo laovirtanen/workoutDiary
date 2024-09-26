@@ -80,7 +80,19 @@ const WorkoutList = () => {
           renderItem={({ item }) => (
             <View style={styles.item}>
               <View style={styles.rowContainer}>
-                <View style={styles.iconContainer}>
+                <View
+                  style={[
+                    styles.iconContainer,
+                    {
+                      backgroundColor:
+                        item.workout === "Run"
+                          ? "grey" // running bg color
+                          : item.workout === "Ski"
+                          ? "lightblue" // skiing bg color
+                          : "#00CED1", // swimming bg color
+                    },
+                  ]}
+                >
                   {item.workout === "Run" && (
                     <FontAwesome5 name="running" size={24} color="black" />
                   )}

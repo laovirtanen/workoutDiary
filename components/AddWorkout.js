@@ -106,15 +106,32 @@ const AddWorkout = ({ navigation }) => {
         <ButtonGroup
           onPress={(index) => setSelectedIndex(index)}
           selectedIndex={selectedIndex}
-          buttons={buttons.map((button) => (
-            <View style={styles.iconButton}>
-              {button.icon}
-              <Text style={styles.iconText}>{button.text}</Text>
+          buttons={buttons.map((button, index) => (
+            <View style={styles.iconButton} key={index}>
+              <FontAwesome5
+                name={
+                  button.text === "Run"
+                    ? "running"
+                    : button.text === "Ski"
+                    ? "skiing-nordic"
+                    : "swimmer"
+                }
+                size={24}
+                color={selectedIndex === index ? "white" : "black"} // Change color based on selection, white if selected
+              />
+              <Text
+                style={[
+                  styles.iconText,
+                  { color: selectedIndex === index ? "white" : "black" },
+                ]}
+              >
+                {button.text}
+              </Text>
             </View>
           ))}
           containerStyle={styles.buttonGroupContainer}
           buttonStyle={styles.buttonGroupButton}
-          selectedButtonStyle={styles.selectedButtonGroupButton}
+          selectedButtonStyle={styles.selectedButtonGroupButton} // Applies selected background color
           innerBorderStyle={{ width: 0 }}
         />
 
